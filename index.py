@@ -3,7 +3,7 @@ import numpy as np
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Float, Integer
+from sqlalchemy import Column, Float, Integer, String
 from bokeh.plotting import figure, output_file, show
 from bokeh.io import output_notebook, export_png
 import matplotlib
@@ -118,10 +118,20 @@ class DataProcessor:
     def create_database(self):
         """Create a SQLite database and initialize tables."""
         self.engine = create_engine('sqlite:///data.db', echo=True)
-        with self.engine.connect() as connection:
+        with self.engine.begin() as connection:
             self.training_dataset.to_sql('training_data', con=connection, if_exists='replace', index=False)
             if self.ideal_functions is not None:
                 self.ideal_functions.to_sql('ideal_functions', con=connection, if_exists='replace', index=False)
+            test_data_table = """
+                CREATE TABLE IF NOT EXISTS test_data (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    x FLOAT,
+                    y FLOAT,
+                    delta_y_column FLOAT,
+                    ideal_function FLOAT
+                )
+            """
+            connection.execute(text(test_data_table))
     
     def create_session(self):
         """Create a new session with the database."""
