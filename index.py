@@ -1,12 +1,9 @@
 import pandas as pd
 import numpy as np
-# import sqlite3
-# import math
-# import sqlalchemy
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Float, String, Integer
+from sqlalchemy import Column, Float, Integer
 from bokeh.plotting import figure, output_file, show
 from bokeh.io import output_notebook, export_png
 import matplotlib
@@ -117,7 +114,6 @@ class DataProcessor:
         """Load the test dataset from a CSV file."""
         filename = "test.csv"
         self.test_dataset = pd.read_csv(filename)
-        print("Test dataset length:", len(self.test_dataset))
 
     def create_database(self):
         """Create a SQLite database and initialize tables."""
@@ -185,7 +181,7 @@ class DataProcessor:
 
 
 class DataVisualization:
-    """Handles data visualization using Bokeh and other libraries."""
+    """Handles data visualization using Bokeh, SQLAlchemy and matplotlib."""
 
     def __init__(self, data_processor):
         self.data_processor = data_processor

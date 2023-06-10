@@ -2,13 +2,8 @@ import unittest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 import pandas as pd
-from unittest.mock import patch, MagicMock
-from io import StringIO
 from unittest import mock
-from sqlalchemy import create_engine, text
-from bokeh.plotting import figure, output_file, show, output_notebook
-from bokeh.io import export_png
-import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
 
 from index import (
     TrainingData,
@@ -19,6 +14,7 @@ from index import (
 )
 
 class TrainingDataTestCase(unittest.TestCase):
+    """Unit tests for the TrainingData class."""
 
     @classmethod
     def setUpClass(cls):
@@ -53,6 +49,7 @@ class TrainingDataTestCase(unittest.TestCase):
         self.assertEqual(result.y4, 4.0)
 
 class IdealFunctionTestCase(unittest.TestCase):
+    """Unit tests for the IdealFunction class."""
 
     @classmethod
     def setUpClass(cls):
@@ -88,10 +85,11 @@ class IdealFunctionTestCase(unittest.TestCase):
         self.assertEqual(result.y5, 5.0)
 
 class TestDataTestCase(unittest.TestCase):
+    """Unit tests for the TestData class."""
 
     @classmethod
     def setUpClass(cls):
-        # Create an in-memory SQLite database for testing
+        """Create an in-memory SQLite database for testing"""
         engine = create_engine('sqlite:///:memory:', echo=True)
         Session = sessionmaker(bind=engine)
         cls.session = Session()
@@ -99,11 +97,11 @@ class TestDataTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        # Close the session and clean up the database
+        """Close the session and clean up the database"""
         cls.session.close()
 
     def test_test_data(self):
-        # Create a new test data object
+        """# Create a new test data object"""
         test_data = TestData(id=1, x=0.5, y=1.0, delta_y=0.1, ideal_function=2)
 
         # Add the test data to the session
@@ -121,6 +119,7 @@ class TestDataTestCase(unittest.TestCase):
         self.assertEqual(result.ideal_function, 2)
 
 class DataProcessorTestCase(unittest.TestCase):
+    """Unit tests for the DataProcessor class."""
     def setUp(self):
         self.data_processor = DataProcessor()
 
@@ -177,18 +176,23 @@ class DataProcessorTestCase(unittest.TestCase):
         self.assertTrue(len(ideal_functions) > 0)
 
 class TestDataVisualization(unittest.TestCase):
+    """Unit tests for the DataVisualization class."""
 
     def setUp(self):
+        """Set up the test case."""
         self.data_processor = DataProcessor()
         self.visualization = DataVisualization(self.data_processor)
 
     def test_plot_ideal_functions(self):
+        """Test the plot_ideal_functions method."""
         self.visualization.plot_ideal_functions()
 
     def test_plot_training_data(self):
+        """Test the plot_training_data method."""
         self.visualization.plot_training_data()
 
     def test_visualize_data(self):
+        """Test the visualize_data method."""
         self.data_processor.test_dataset = {'x': [1, 2, 3, 4, 5], 'y': [2, 4, 6, 8, 10]}
         self.visualization.visualize_data()
             
